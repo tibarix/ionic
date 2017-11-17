@@ -1,30 +1,72 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Login
+      Authentication
     </ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
-    <ion-row>
-      <ion-col>
-        <ion-list inset>
-          <ion-item>
-            <ion-input placeholder="Email" name="username" id="loginField" type="email" required [(ngModel)]="username" #email></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input placeholder="Password" name="password" id="passwordField" type="password" required [(ngModel)]="password"></ion-input>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-        <button ion-button class="submit-btn" full type="submit" [disabled]="!loginForm.form.valid">Login
-        </button>
-      </ion-col>
-    </ion-row>
-  </form>
+  <div [ngSwitch]="authType">
+    <ion-avatar item-start>
+      <img src="../../assets/icon/auth.png" class=img-responsive>
+      
+      
+    </ion-avatar>
+    <form #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off" *ngSwitchCase="'login'">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input placeholder="Email" name="username" id="loginField" type="email" required [(ngModel)]="user.username" #email></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input placeholder="Password" name="password" id="passwordField" type="password" required [(ngModel)]="user.password"></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!loginForm.form.valid">Login
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
+    <form #signUpForm="ngForm" (ngSubmit)="signup()" autocomplete="off" *ngSwitchCase="'signup'">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input placeholder="Username" name="email" id="loginField" type="email" required [(ngModel)]="user.username"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input placeholder="Email" name="email" id="loginField" type="email" required [(ngModel)]="user.email"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input placeholder="Password" name="password" id="passwordField" type="password" required [(ngModel)]="user.password"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input placeholder="Password 2" name="password" id="passwordField" type="password" required [(ngModel)]="user.password"></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!signUpForm.form.valid">Sign Up
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+  <ion-segment [(ngModel)]="authType" color="primary">
+    <ion-segment-button value="login">
+      Log In
+    </ion-segment-button>
+    <ion-segment-button value="signup">
+      Sign Up
+    </ion-segment-button>
+  </ion-segment>
 </ion-content>

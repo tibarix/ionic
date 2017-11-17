@@ -1,6 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+import { SuperTabsModule } from 'ionic2-super-tabs';
 import { MyApp } from './app.component';
 
 import { AboutPage } from '../pages/about/about';
@@ -11,6 +12,11 @@ import { SplashPage } from '../pages/splash/splash';
 import { Geolocation } from '@ionic-native/geolocation';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthProvider } from '../providers/auth/auth';
+import {
+ GoogleMaps
+} from '@ionic-native/google-maps';
 @NgModule({
   declarations: [
     MyApp,
@@ -23,7 +29,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    SuperTabsModule.forRoot(),
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -40,6 +48,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     Geolocation,
+     GoogleMaps,
+     HttpClientModule,
+     AuthProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })

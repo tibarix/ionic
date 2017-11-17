@@ -14,6 +14,6 @@ export class TabsPage {
   settingsTab = SettingsPage;
 
   constructor() {
-    let api_key = "AIzaSyCcqMsU_4tVuiqG5Y-Gpprn3n-7PWwmtv0";
+    let api_key = "AIzaSyCcqMsU_4tVuiqG5Y-Gpprn3n-7PWwmtv0",android="AIzaSyCH58pMJ72yaQa_albqDyXdk4neqiJkNac"
   }
 }

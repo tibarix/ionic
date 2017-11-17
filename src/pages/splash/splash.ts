@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { TabsPage } from '../tabs/tabs';
-
+import { AuthProvider } from '../../providers/auth/auth';
 /**
  * Generated class for the SplashPage page.
  *
@@ -14,11 +14,17 @@ import { TabsPage } from '../tabs/tabs';
   templateUrl: 'splash.html',
 })
 export class SplashPage {
-  private username:string;
-  private password:string;
+  private user:any = {
+    username : "",
+    email:"",
+    password:"",
+    password2:"",
+
+};
   private error:string;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  
+  private authType:string;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public authService:AuthProvider) {
+  this.authType = "login";
 }
 
   goHome(){
@@ -26,7 +32,8 @@ export class SplashPage {
   }
 
   login(){
-    if(this.username && this.password){
+    if(this.user.username && this.user.password){
+      
       this.goHome();
     }else{
       this.error = "error occured";

@@ -9,5 +9,7 @@ import { SplashPage } from './splash';
   imports: [
     IonicPageModule.forChild(SplashPage),
   ],
+  providers:[
+  ]
 })
 export class SplashPageModule {}
