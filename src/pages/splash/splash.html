@@ -47,7 +47,7 @@
               <ion-input placeholder="Password" name="password" id="passwordField" type="password" required [(ngModel)]="user.password"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-input placeholder="Password 2" name="password" id="passwordField" type="password" required [(ngModel)]="user.password"></ion-input>
+              <ion-input placeholder="Password 2" name="password" id="passwordField" type="password" required [(ngModel)]="user.password2"></ion-input>
             </ion-item>
           </ion-list>
         </ion-col>
@@ -61,8 +61,8 @@
       </ion-row>
     </form>
   </div>
-  <ion-segment [(ngModel)]="authType" color="primary">
-    <ion-segment-button value="login">
+  <ion-segment [(ngModel)]="authType" color="primary" (click) = "clearForms()">
+    <ion-segment-button value="login" >
       Log In
     </ion-segment-button>
     <ion-segment-button value="signup">

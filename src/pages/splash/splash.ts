@@ -22,9 +22,8 @@ export class SplashPage {
 
 };
   private error:string;
-  private authType:string;
+  private authType:string = "login";
   constructor(public navCtrl: NavController, public navParams: NavParams, public authService:AuthProvider) {
-  this.authType = "login";
 }
 
   goHome(){
@@ -32,11 +31,15 @@ export class SplashPage {
   }
 
   login(){
-    if(this.user.username && this.user.password){
-      
-      this.goHome();
-    }else{
-      this.error = "error occured";
-    }
+    this.authService.login(this.user,(err)=> {
+      this.error = err;
+    });
+  }
+  signup(){
+    console.log("signup")
+  }
+
+  clearForms(){
+    this.user = {};
   }
 }

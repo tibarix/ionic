@@ -12,7 +12,8 @@ import { SplashPage } from '../pages/splash/splash';
 import { Geolocation } from '@ionic-native/geolocation';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
+import {IonicStorageModule} from '@ionic/storage';
 import { AuthProvider } from '../providers/auth/auth';
 import {
  GoogleMaps
@@ -30,8 +31,8 @@ import {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    SuperTabsModule.forRoot(),
-    HttpClientModule
+    IonicStorageModule.forRoot(),
+    HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -49,7 +50,6 @@ import {
     SplashScreen,
     Geolocation,
      GoogleMaps,
-     HttpClientModule,
      AuthProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
