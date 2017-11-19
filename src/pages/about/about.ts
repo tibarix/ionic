@@ -14,7 +14,7 @@ export class AboutPage {
   map: any;
   private directionsService ;
   private directionsDisplay ;
-  private currentPos={
+  private currentPos={ 
     lat: 41.85, 
     lng: -87.65
   };
