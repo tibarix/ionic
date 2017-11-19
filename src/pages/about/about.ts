@@ -20,7 +20,9 @@ export class AboutPage {
   };
   private mapOptions = {
     zoom: 7,
-    center: this.currentPos
+    center: this.currentPos,
+    streetViewControl: false,
+    mapTypeControl: false,
   }
   private markers:any = [];
   private spinner:any;
