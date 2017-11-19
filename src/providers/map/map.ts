@@ -22,10 +22,10 @@ export class MapProvider {
     console.log('Hello MapProvider Provider');
   }
   initMap(element,options,mapCallback,errorCallback){
-    if(google){
+    if(typeof google != "undefined"){
         mapCallback(new google.maps.Map(element, options));
     }else{
-       errorCallback("No connection is detected!")
+       errorCallback("Check your internet!")
     }
   }
   loadMarkers(map):Observable<any>{

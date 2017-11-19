@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController ,LoadingController,ToastController} from 'ionic-angular';
 import { MapProvider} from '../../providers/map/map';
 declare var google;
 
@@ -11,8 +11,8 @@ export class AboutPage {
 
   @ViewChild('map') mapElement: ElementRef;
   map: any;
-  directionsService = new google.maps.DirectionsService;
-  directionsDisplay = new google.maps.DirectionsRenderer;
+  private directionsService ;
+  private directionsDisplay ;
   private currentPos={
     lat: 41.85, 
     lng: -87.65
@@ -22,19 +22,28 @@ export class AboutPage {
     center: this.currentPos
   }
   private markers:any = [];
-  constructor(public navCtrl: NavController,private mapService:MapProvider) {
-
+  private spinner:any;
+  constructor(public navCtrl: NavController,public mapService:MapProvider,
+              public toastCtrl: ToastController,public loaderCtrl: LoadingController) {
+    if(typeof google != "undefined"){
+      this.directionsService = new google.maps.DirectionsService;
+      this.directionsDisplay = new google.maps.DirectionsRenderer;
+    }else{
+      this.showToast("Check your internet");
+    }
   }
 
   ionViewDidLoad(){
-    this.initMap();
+    if(typeof google != "undefined"){
+      this.initMap();
+    }
   }
   
   initMap() {
-    console.log("loading map");
+    this.showLoader("Loading map");
     this.mapService.initMap(this.mapElement.nativeElement,this.mapOptions,
-      (map) => {this.map = map,this.loadMarkers()} ,
-      error => console.log(error)
+      (map) => {this.map = map,this.loadMarkers();this.spinner.dismiss()} ,
+      error => {this.spinner.dismiss();console.log(error)}
     );
     this.directionsDisplay.setMap(this.map);
   }
@@ -56,6 +65,27 @@ export class AboutPage {
   }
   renderMap(){
     this.directionsDisplay.setMap(this.map);
+  }
+
+  showToast(message?,duration?,position?){
+    message = message || "Error occured,please try again later!";
+    duration = duration || 1000;
+    position = position || 'bottom';
+    this.toastCtrl.create({
+        message: message,
+        duration: duration,
+        position: position,
+
+      }).present();
+  }
+  showLoader(message,callback?,duration?){
+    duration = duration || 2000;
+    this.spinner = this.loaderCtrl.create({
+        spinner: 'show',
+        content:message,
+        duration: duration
+      });
+      this.spinner.present();
   }
   calculateAndDisplayRoute() {
     this.directionsService.route({
