@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController ,LoadingController,ToastController} from 'ionic-angular';
+import { Geolocation } from '@ionic-native/geolocation';
 import { MapProvider} from '../../providers/map/map';
 declare var google;
 
@@ -23,31 +24,59 @@ export class AboutPage {
   }
   private markers:any = [];
   private spinner:any;
+  private myMarker:any;
   constructor(public navCtrl: NavController,public mapService:MapProvider,
-              public toastCtrl: ToastController,public loaderCtrl: LoadingController) {
+              public toastCtrl: ToastController,public loaderCtrl: LoadingController,
+              public geolocation: Geolocation) {
     if(typeof google != "undefined"){
       this.directionsService = new google.maps.DirectionsService;
       this.directionsDisplay = new google.maps.DirectionsRenderer;
+      this.geolocation.getCurrentPosition().then((pos)=>{
+        this.currentPos.lat = pos.coords.latitude;
+        this.currentPos.lng = pos.coords.longitude;
+        this.initMap();
+      }).catch((err)=>{
+        console.log(err)
+      });
+
+      
     }else{
       this.showToast("Check your internet");
     }
   }
 
   ionViewDidLoad(){
-    if(typeof google != "undefined"){
-      this.initMap();
-    }
+    
   }
   
   initMap() {
     this.showLoader("Loading map");
     this.mapService.initMap(this.mapElement.nativeElement,this.mapOptions,
-      (map) => {this.map = map,this.loadMarkers();this.spinner.dismiss()} ,
+      (map) => {this.map = map,this.mapDidLoad()} ,
       error => {this.spinner.dismiss();console.log(error)}
     );
     this.directionsDisplay.setMap(this.map);
   }
-
+  mapDidLoad(){
+    this.loadMarkers();
+    this.spinner.dismiss();
+    this.watchPosition();
+  }
+  watchPosition(){
+    console.log("fkjzhfrj")
+    this.geolocation.watchPosition().subscribe((position)=>{
+      let x = position.coords.latitude;
+      let y = position.coords.longitude;
+      let latLng = new google.maps.LatLng(x,y);
+      let marker = new google.maps.Marker({
+        map: this.map,
+        
+        position: latLng
+      });
+      marker.setMap(this.map);
+      this.updateMap([marker]);
+    });
+  }
   loadMarkers(){
     this.mapService.loadMarkers(this.map).subscribe(data => {
       this.updateMap(data);
