@@ -19,6 +19,7 @@ import { AuthProvider } from '../providers/auth/auth';
 import {
  GoogleMaps
 } from '@ionic-native/google-maps';
+import { MapProvider } from '../providers/map/map';
 @NgModule({
   declarations: [
     MyApp,
@@ -53,6 +54,7 @@ import {
      GoogleMaps,
      AuthProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    MapProvider,
   ]
 })
 export class AppModule {}
