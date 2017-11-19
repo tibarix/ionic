@@ -16,6 +16,8 @@ import { AuthProvider } from '../../providers/auth/auth';
 export class SplashPage {
   private user:any = {
     username : "",
+    name:"med", // mock
+    job:"hello", // mock
     email:"",
     password:"",
     password2:"",
@@ -31,7 +33,15 @@ export class SplashPage {
   }
 
   login(){
-    this.authService.login(this.user,(err)=> {
+    this.authService.login(this.user,
+    (data) => {
+      if(data){
+        console.log(data);
+        this.goHome();
+      }
+    },
+    (err)=> {
+      console.log(err);
       this.error = err;
     });
   }
