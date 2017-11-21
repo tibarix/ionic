@@ -1,6 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { NavController ,LoadingController,ToastController} from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Socket } from 'ng-socket-io';
 import { MapProvider} from '../../providers/map/map';
 declare var google;
 
@@ -19,17 +20,17 @@ export class AboutPage {
     lng: -87.65
   };
   private mapOptions = {
-    zoom: 7,
+    zoom: 0,
     center: this.currentPos,
     streetViewControl: false,
     mapTypeControl: false,
   }
   private markers:any = [];
   private spinner:any;
-  private myMarker:any;
   constructor(public navCtrl: NavController,public mapService:MapProvider,
               public toastCtrl: ToastController,public loaderCtrl: LoadingController,
-              public geolocation: Geolocation) {
+              public geolocation: Geolocation,public socket:Socket) {
+                this.socket.connect();
     if(typeof google != "undefined"){
       this.directionsService = new google.maps.DirectionsService;
       this.directionsDisplay = new google.maps.DirectionsRenderer;
@@ -48,13 +49,12 @@ export class AboutPage {
   }
 
   ionViewDidLoad(){
-    
   }
   
   initMap() {
     this.showLoader("Loading map");
     this.mapService.initMap(this.mapElement.nativeElement,this.mapOptions,
-      (map) => {this.map = map,this.mapDidLoad()} ,
+      map => {this.map = map,this.mapDidLoad()} ,
       error => {this.spinner.dismiss();console.log(error)}
     );
     this.directionsDisplay.setMap(this.map);
@@ -65,33 +65,51 @@ export class AboutPage {
     this.watchPosition();
   }
   watchPosition(){
-    console.log("fkjzhfrj")
     this.geolocation.watchPosition().subscribe((position)=>{
-      let x = position.coords.latitude;
-      let y = position.coords.longitude;
-      let latLng = new google.maps.LatLng(x,y);
-      let marker = new google.maps.Marker({
-        map: this.map,
-        
-        position: latLng
-      });
-      marker.setMap(this.map);
-      this.updateMap([marker]);
+      if(typeof position.coords != "undefined"){
+        this.currentPos.lat = position.coords.latitude;
+        this.currentPos.lng = position.coords.longitude;
+        let latLng = new google.maps.LatLng(this.currentPos.lat,this.currentPos.lng);
+        let marker = new google.maps.Marker({
+          map: this.map,
+          position: latLng
+        });
+        marker.setMap(this.map);
+        var circle = new google.maps.Circle({
+          map: this.map,
+          radius: 16093,    // 10 miles in metres
+          fillColor: '#AA0000'
+        });
+      circle.bindTo('center', marker, 'position');
+        this.renderMap();
+      }else
+        this.showToast("Network running slow!");
     });
   }
   loadMarkers(){
-    this.mapService.loadMarkers(this.map).subscribe(data => {
+    this.mapService.loadMarkers().subscribe(data => {
+      console.log('markers loaded ',data.length)
       this.updateMap(data);
     });
   }
   updateMap(data){
     //clear map of existing markers
-    for(var i = 0;i<this.markers.length;++i){
+    /*for(var i = 0;i<this.markers.length;++i){
       this.markers[i].setMap(null);
-    }
+    }*/
     this.markers = [];
     //add the newly updated and the new markers
-    this.markers = data;
+    for(var pt of data){
+      let pos = new google.maps.LatLng(pt.lat,pt.lng);
+      let marker = new google.maps.Marker({
+        map: this.map,
+        position:pos
+      });
+      marker.setMap(this.map);
+      this.markers.push(marker);
+    }
+
+    
     this.renderMap();
   }
   renderMap(){

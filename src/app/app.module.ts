@@ -15,11 +15,13 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import {IonicStorageModule} from '@ionic/storage';
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { AuthProvider } from '../providers/auth/auth';
 import {
  GoogleMaps
 } from '@ionic-native/google-maps';
 import { MapProvider } from '../providers/map/map';
+const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
 @NgModule({
   declarations: [
     MyApp,
@@ -34,6 +36,7 @@ import { MapProvider } from '../providers/map/map';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
+    SocketIoModule.forRoot(config),
     HttpClientModule
   ],
   bootstrap: [IonicApp],
